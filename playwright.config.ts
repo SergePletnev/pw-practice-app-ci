@@ -33,10 +33,21 @@ export default defineConfig<TestOptions>({
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
+    process.env.CI ? ["dot"] : ["list"],
     // ['json', {outputFile: 'test-results/jsonReport.json'}],
     // ['junit', {outputFile: 'test-results/juitReport.xml'}],
     // ['allure-playwright'],
-    ['html']
+    ['html'],
+    [
+      "@argos-ci/playwright/reporter",
+      {
+        // Upload to Argos on CI only.
+        uploadToArgos: !!process.env.CI,
+
+        // Set your Argos token (required if not using GitHub Actions).
+        // token: "<YOUR-ARGOS-TOKEN>",
+      },
+    ],
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
@@ -62,6 +73,7 @@ export default defineConfig<TestOptions>({
     globalsQaURL: 'https://www.globalsqa.com/demo-site/draganddrop',
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
+    screenshot: "only-on-failure",
     // actionTimeout: 5000,
     // navigationTimeout: 5000,
     video: {

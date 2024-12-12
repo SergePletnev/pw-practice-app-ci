@@ -17,6 +17,8 @@ jobs:
       run: npm ci --force
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps --force
+    - name: Start application
+      run: npm start
     - name: Run Playwright tests
       run: npm run pageObjects:chrome
     - uses: actions/upload-artifact@v4
